@@ -17,9 +17,9 @@ import okhttp3.*;
 // 1. Customize table names
 // *. port, user, password is not used
 
-public class DruidAdapter implements BaseAdapter {
+//public class DruidAdapter implements BaseAdapter {
+public class DruidAdapter {
 
-    // TODO modify table names
     private final String dataSourceName = ""; 
     private final String baseTableName = "base_table"; // table storing financial instrument information
     private final String splitTableName = "split_table"; // table storing split events
@@ -70,6 +70,7 @@ public class DruidAdapter implements BaseAdapter {
             FileOutputStream oFile = new FileOutputStream(tmp, true);
             oFile.write(msg.getBytes());
             oFile.flush();
+			oFile.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,141 +78,139 @@ public class DruidAdapter implements BaseAdapter {
     }
 
     //// Adapter functions ////
-    @Override
     public void initConnect(String ip, String port, String user, String password) {
         writeURL = "http://" + ip + writeURL;
         queryURL = "jdbc:avatica:remote:url=" + "http://" + ip + queryURL;
     }
 
-    @Override
-			public double insertData(String filename) {
-				double costTime = 0L;
-				String json =
-					"{ " +
-					"	\"type\": \"index\", " +
-					"	\"spec\": { " +
-					"		\"ioConfig\": { " +
-					"			\"type\": \"index\", " +
-					"			\"inputSource\": { " +
-					"				\"type\": \"local\", " +
-					"				\"baseDir\": \"/Users/111420/Documents/DruidDB_Tester_large_parquet\", " +
-					"				\"filter\": \"" + filename + "\" " +
-					"			}, " +
-					"			\"inputFormat\": {" +
-					"				\"type\": \"csv\", " +
-					"				\"findColumnsFromHeader\": true " +
-					"			} " +
-					"		}, " +
-					"		\"tuningConfig\": { " +
-					"			\"type\": \"index\", " +
-					"			\"partitionsSpec\": { " +
-					"				\"type\": \"dynamic\" " +
-					"			} " +
-					"		}, " +
-					"		\"dataSchema\": { " +
-					"			\"dataSource\": \"" + filename + "\", " +
-					"			\"timestampSpec\": { " +
-					"				\"column\": \"myTimestamp2\", " +
-					"				\"format\": \"posix\" " +
-					"			}, " +
-					"			\"dimensionsSpec\": { " +
-					"				\"dimensions\": [ " +
-					"					\"batch_id\", " +
-					"				{ " +
-					"					\"type\": \"long\", " +
-					"					\"name\": \"row_no\" " +
-					"				}, " +
-					"				\"ms_id\", " +
-					"				\"ms_version\", " +
-					"				\"pu_version\", " +
-					"				{ " +
-					"					\"type\": \"long\", " +
-					"					\"name\": \"primary_key\" " +
-					"				}, " +
-					"				{ " +
-					"					\"type\": \"long\", " +
-					"					\"name\": \"rewards_number\" " +
-					"				}, " +
-					"				\"similarity_config\", " +
-					"				\"edit_item_000\", " +
-					"				\"edit_item_001\", " +
-					"				\"edit_item_002\", " +
-					"				\"edit_item_003\", " +
-					"				\"edit_item_004\", " +
-					"				\"edit_item_005\", " +
-					"				\"edit_item_006\", " +
-					"				\"edit_item_007\", " +
-					"				\"edit_item_008\", " +
-					"				\"edit_item_009\", " +
-					"				\"edit_item_010\", " +
-					"				\"edit_item_013\", " +
-					"				\"edit_item_014\", " +
-					"				\"edit_item_100\", " +
-					"				\"edit_item_200\", " +
-					"				\"edit_item_201\", " +
-					"				\"edit_item_400\", " +
-					"				\"edit_item_401\", " +
-					"				\"edit_item_402\", " +
-					"				\"edit_item_403\", " +
-					"				\"edit_item_404\", " +
-					"				\"edit_item_405\", " +
-					"				\"edit_item_413\", " +
-					"				\"edit_item_500\", " +
-					"				\"edit_item_501\", " +
-					"				\"edit_item_502\", " +
-					"				\"edit_item_503\", " +
-					"				\"edit_item_504\", " +
-					"				\"edit_item_505\", " +
-					"				\"edit_item_513\", " +
-					"				\"edit_item_600\", " +
-					"				\"edit_item_601\", " +
-					"				\"edit_item_613\", " +
-					"				\"edit_item_700\", " +
-					"				\"edit_item_713\", " +
-					"				\"edit_item_800\", " +
-					"				\"edit_item_801\", " +
-					"				\"edit_item_802\", " +
-					"				\"edit_item_803\", " +
-					"				\"edit_item_804\", " +
-					"				\"edit_item_805\", " +
-					"				\"edit_item_807\", " +
-					"				\"edit_item_808\", " +
-					"				\"edit_item_809\", " +
-					"				\"edit_item_810\", " +
-					"				\"edit_item_812\", " +
-					"				\"edit_item_813\", " +
-					"				\"edit_item_1004\", " +
-					"				\"edit_item_1006\", " +
-					"				\"edit_item_1010\", " +
-					"				\"edit_item_1013\" " +
-					"					] " +
-					"			}, " +
-					"			\"granularitySpec\": { " +
-					"				\"queryGranularity\": \"none\", " +
-					"				\"rollup\": false, " +
-					"				\"segmentGranularity\": \"hour\" " +
-					"			} " +
-					"		} " +
-					"	} " +
-					"} ";
+	public double insertData(String filename) {
+		double costTime = 0L;
+		String json =
+			"{ " +
+			"	\"type\": \"index\", " +
+			"	\"spec\": { " +
+			"		\"ioConfig\": { " +
+			"			\"type\": \"index\", " +
+			"			\"inputSource\": { " +
+			"				\"type\": \"local\", " +
+			"				\"baseDir\": \"/Users/111420/Documents/DruidDB_Tester_large_parquet\", " +
+			"				\"filter\": \"" + filename + "\" " +
+			"			}, " +
+			"			\"inputFormat\": {" +
+			"				\"type\": \"csv\", " +
+			"				\"findColumnsFromHeader\": true " +
+			"			} " +
+			"		}, " +
+			"		\"tuningConfig\": { " +
+			"			\"type\": \"index\", " +
+			"			\"partitionsSpec\": { " +
+			"				\"type\": \"dynamic\" " +
+			"			} " +
+			"		}, " +
+			"		\"dataSchema\": { " +
+			"			\"dataSource\": \"" + filename + "\", " +
+			"			\"timestampSpec\": { " +
+			"				\"column\": \"myTimestamp2\", " +
+			"				\"format\": \"posix\" " +
+			"			}, " +
+			"			\"dimensionsSpec\": { " +
+			"				\"dimensions\": [ " +
+			"					\"batch_id\", " +
+			"				{ " +
+			"					\"type\": \"long\", " +
+			"					\"name\": \"row_no\" " +
+			"				}, " +
+			"				\"ms_id\", " +
+			"				\"ms_version\", " +
+			"				\"pu_version\", " +
+			"				{ " +
+			"					\"type\": \"long\", " +
+			"					\"name\": \"primary_key\" " +
+			"				}, " +
+			"				{ " +
+			"					\"type\": \"long\", " +
+			"					\"name\": \"rewards_number\" " +
+			"				}, " +
+			"				\"similarity_config\", " +
+			"				\"edit_item_000\", " +
+			"				\"edit_item_001\", " +
+			"				\"edit_item_002\", " +
+			"				\"edit_item_003\", " +
+			"				\"edit_item_004\", " +
+			"				\"edit_item_005\", " +
+			"				\"edit_item_006\", " +
+			"				\"edit_item_007\", " +
+			"				\"edit_item_008\", " +
+			"				\"edit_item_009\", " +
+			"				\"edit_item_010\", " +
+			"				\"edit_item_013\", " +
+			"				\"edit_item_014\", " +
+			"				\"edit_item_100\", " +
+			"				\"edit_item_200\", " +
+			"				\"edit_item_201\", " +
+			"				\"edit_item_400\", " +
+			"				\"edit_item_401\", " +
+			"				\"edit_item_402\", " +
+			"				\"edit_item_403\", " +
+			"				\"edit_item_404\", " +
+			"				\"edit_item_405\", " +
+			"				\"edit_item_413\", " +
+			"				\"edit_item_500\", " +
+			"				\"edit_item_501\", " +
+			"				\"edit_item_502\", " +
+			"				\"edit_item_503\", " +
+			"				\"edit_item_504\", " +
+			"				\"edit_item_505\", " +
+			"				\"edit_item_513\", " +
+			"				\"edit_item_600\", " +
+			"				\"edit_item_601\", " +
+			"				\"edit_item_613\", " +
+			"				\"edit_item_700\", " +
+			"				\"edit_item_713\", " +
+			"				\"edit_item_800\", " +
+			"				\"edit_item_801\", " +
+			"				\"edit_item_802\", " +
+			"				\"edit_item_803\", " +
+			"				\"edit_item_804\", " +
+			"				\"edit_item_805\", " +
+			"				\"edit_item_807\", " +
+			"				\"edit_item_808\", " +
+			"				\"edit_item_809\", " +
+			"				\"edit_item_810\", " +
+			"				\"edit_item_812\", " +
+			"				\"edit_item_813\", " +
+			"				\"edit_item_1004\", " +
+			"				\"edit_item_1006\", " +
+			"				\"edit_item_1010\", " +
+			"				\"edit_item_1013\" " +
+			"					] " +
+			"			}, " +
+			"			\"granularitySpec\": { " +
+			"				\"queryGranularity\": \"none\", " +
+			"				\"rollup\": false, " +
+			"				\"segmentGranularity\": \"hour\" " +
+			"			} " +
+			"		} " +
+			"	} " +
+			"} ";
 
-				System.out.println("\n" + json + "\n");
-				// build a POST request
-				Request request = null;
-				try {
-					request = new Request.Builder()
-						.url(writeURL)
-						.post(RequestBody.create(MEDIA_TYPE_TEXT, json.getBytes("UTF-8")))
-						.build();
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.out.println("Unexpected error in sending request!");
-				}
+		System.out.println("\n" + json + "\n");
+		// build a POST request
+		Request request = null;
+		try {
+			request = new Request.Builder()
+				.url(writeURL)
+				.post(RequestBody.create(MEDIA_TYPE_TEXT, json.getBytes("UTF-8")))
+				.build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Unexpected error in sending request!");
+		}
 
-				// execute the request
-				costTime = exeOkHttpRequest(request);
-				return costTime;
-			}
+		// execute the request
+		costTime = exeOkHttpRequest(request);
+		return costTime;
+	}
 
     public double query1a() throws SQLException, ClassNotFoundException {
         Class.forName("org.apache.calcite.avatica.remote.Driver");
@@ -328,69 +327,4 @@ public class DruidAdapter implements BaseAdapter {
         return (endTime - startTime) / 1000 / 1000;
     }
 
-	/*
-	public double query1a() throws SQLException, ClassNotFoundException {
-		Class.forName("org.apache.calcite.avatica.remote.Driver");
-		Properties properties = new Properties();
-		String query = 
-				"SELECT Id, EXTRACT(YEAR FROM __time), AVG(\"ClosePrice\"), MAX(\"ClosePrice\"), MIN(\"ClosePrice\") " +
-				" FROM " + dataSourceName +
-				" WHERE EXTRACT(YEAR FROM __time) >= 2022 AND EXTRACT(YEAR FROM __time) < 2032 " +
-				" GROUP BY Id, EXTRACT(YEAR FROM __time) " + 
-				" ORDER BY Id, EXTRACT(YEAR FROM __time) ";
-		double startTime, endTime;
-        try (Connection connection = DriverManager.getConnection(queryURL, properties)) {
-        	try (final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-        		startTime = System.nanoTime();
-        		final ResultSet resultSet = preparedStatement.executeQuery();
-        		endTime = System.nanoTime();
-        		resultSet.close();
-        	}
-        }
-		return (endTime - startTime) / 1000 / 1000;
-	}
-
-	public double query1b() throws SQLException, ClassNotFoundException {
-		Class.forName("org.apache.calcite.avatica.remote.Driver");
-		Properties properties = new Properties();
-		String query = String.format("""
-				SELECT Id, EXTRACT(YEAR FROM __time), EXTRACT(MONTH FROM __time), AVG("ClosePrice"), MAX("ClosePrice"), MIN("ClosePrice")
-				FROM %s
-				WHERE EXTRACT(YEAR FROM __time) >= 2022 AND EXTRACT(YEAR FROM __time) < 2032
-				GROUP BY Id, EXTRACT(YEAR FROM __time), EXTRACT(MONTH FROM __time)
-				ORDER BY Id, EXTRACT(YEAR FROM __time), EXTRACT(MONTH FROM __time)
-				""", dataSourceName);
-		double startTime, endTime;
-        try (Connection connection = DriverManager.getConnection(queryURL, properties)) {
-        	try (final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-        		startTime = System.nanoTime();
-        		final ResultSet resultSet = preparedStatement.executeQuery();
-        		endTime = System.nanoTime();
-        		resultSet.close();
-        	}
-        }
-		return (endTime - startTime) / 1000 / 1000;
-	}
-	public double query1c() throws SQLException, ClassNotFoundException {
-		Class.forName("org.apache.calcite.avatica.remote.Driver");
-		Properties properties = new Properties();
-		String query = String.format("""
-				SELECT Id, EXTRACT(YEAR FROM __time), EXTRACT(DAY FROM __time), AVG("ClosePrice"), MAX("ClosePrice"), MIN("ClosePrice")
-				FROM %s
-				WHERE EXTRACT(YEAR FROM __time) >= 2022 AND EXTRACT(YEAR FROM __time) < 2032
-				GROUP BY Id, EXTRACT(YEAR FROM __time), EXTRACT(DAY FROM __time)
-				ORDER BY Id, EXTRACT(YEAR FROM __time), EXTRACT(DAY FROM __time)
-				""", dataSourceName);
-		double startTime, endTime;
-        try (Connection connection = DriverManager.getConnection(queryURL, properties)) {
-        	try (final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-        		startTime = System.nanoTime();
-        		final ResultSet resultSet = preparedStatement.executeQuery();
-        		endTime = System.nanoTime();
-        		resultSet.close();
-        	}
-        }
-		return (endTime - startTime) / 1000 / 1000;
-	}
-	*/
 }

@@ -5,7 +5,7 @@ public interface BaseAdapter {
     // Generate the URLs for writing and making queries, which will be used in other methods
     public void initConnect(String ip, String port, String user, String password);
 
-    public double insertData();
+    public double insertData(String filename);
 
     public double query1a() throws SQLException, ClassNotFoundException;
     public double query1b() throws SQLException, ClassNotFoundException;

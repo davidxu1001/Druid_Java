@@ -2,8 +2,9 @@ import java.sql.SQLException;
 
 public class Druid_Tester {
     public static void main(String[] args) {
-        String ip = "34.150.9.50", port = "", user = "", password = "";
-        int numLoops = 1;
+        // String ip = "34.150.9.50", port = "", user = "", password = "";
+        String ip = "127.0.0.1", port = "", user = "", password = "";
+        int numLoops = 10;
 
         BaseAdapter adapter = null;
         try {
@@ -14,8 +15,11 @@ public class Druid_Tester {
         }
 
         adapter.initConnect(ip, port, user, password);
+				//DruidAdapter.appendToFile("Druid DB Query.csv", importData(adapter, "EGL_DI-2.csv")); 
+				DruidAdapter.appendToFile("Druid DB Query.csv", importData(adapter, "WOW_DI-4.csv")); 
 
         // header in output file
+				/*
         DruidAdapter.appendToFile("Druid DB Query.csv", "\"Trial\",\"Q1a\",\"Q1b\",\"Q1c\",\"Q2(Q3)\",\"Q3(Q4)\"\n");
 
         System.out.println("Run " + numLoops + " loops (Q1 -> Q2 -> Q3 -> Q1 -> ...):");
@@ -24,13 +28,14 @@ public class Druid_Tester {
 
         for (int i = 0; i < numLoops; i++) {
             System.out.println("~trial " + i + "~");
-            // print trial
+           // print trial
             DruidAdapter.appendToFile("Druid DB Query.csv", "\"" + i + "\",");
             // print Q1
             // Double query1result = query1(adapter);
             Double query1aresult = query1a(adapter);
             avgQ1a += query1aresult;
             DruidAdapter.appendToFile("Druid DB Query.csv", "\"" + query1aresult + "\",");
+						/*
             Double query1bresult = query1b(adapter);
             avgQ1b += query1bresult;
             DruidAdapter.appendToFile("Druid DB Query.csv", "\"" + query1bresult + "\",");
@@ -46,21 +51,22 @@ public class Druid_Tester {
             avgQ3 += query3result;
             DruidAdapter.appendToFile("Druid DB Query.csv", "\"" + query3result + "\"\n");
         }
+				*/
 
+				/*
         avgQ1a /= numLoops;
         avgQ2 /= numLoops;
         avgQ3 /= numLoops;
         DruidAdapter.appendToFile("Druid DB Query.csv", "\"avg\",\"" + avgQ1a +
                 "\",\"" + avgQ1b + "\",\"" + avgQ1c + "\",\"" + avgQ2 + "\",\"" + avgQ3 + "\"\n");
-
         System.out.println("Finished all trials");
-
+				*/
 
     }
 
-    private static String importData(BaseAdapter adapter) {
-        double time = adapter.insertData();
-        return "Time spent for receiving respond (not ingestion) is " + time;
+    private static String importData(BaseAdapter adapter, String filename) {
+        double time = adapter.insertData(filename);
+        return "Time spent for receiving respond (not ingestion) is " + time + "\n";
     }
 
     private static Double query1a(BaseAdapter adapter) {
